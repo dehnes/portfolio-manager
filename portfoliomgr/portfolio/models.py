@@ -18,8 +18,8 @@ class Person(models.Model):
 
 
 class Institute(models.Model):
+    bic = models.CharField(max_length=8, blank=False, unique=True)
     name = models.CharField(max_length=100, blank=False)
-    bic = models.CharField(max_length=8, blank=False)
 
     def __str__(self):
         return self.name
@@ -34,6 +34,28 @@ class Portfolio(models.Model):
 
     def __str__(self):
         return self.name
+
+
+ACT = "ACTIVE"
+SUS = "SUSPENDED"
+DEACT = "DEACTIVATED"
+
+ACCOUNT_STATUS_CHOICES = ((ACT, "Active"), (SUS, "Suspended"), (DEACT, "Deactivated"))
+
+
+class BankAccount(models.Model):
+    iban = models.CharField(unique=True, max_length=22)
+    institue = models.ForeignKey(Institute, on_delete=models.CASCADE)
+    balance = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency="EUR",
+        default=0,
+    )
+    owner = models.ForeignKey(Person, on_delete=models.CASCADE)
+    account_status = models.CharField(
+        max_length=15, choices=ACCOUNT_STATUS_CHOICES, default="ACTIVE"
+    )
 
 
 class Depot(models.Model):
