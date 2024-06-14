@@ -1,3 +1,4 @@
+import uuid
 from abc import abstractmethod
 
 from django.db import models
@@ -45,6 +46,7 @@ ACCOUNT_STATUS_CHOICES = ((ACT, "Active"), (SUS, "Suspended"), (DEACT, "Deactiva
 
 class BankAccount(models.Model):
     iban = models.CharField(unique=True, max_length=22)
+    name = models.CharField(max_length=100, default="tbd")
     institue = models.ForeignKey(Institute, on_delete=models.CASCADE)
     balance = MoneyField(
         max_digits=14,
@@ -56,6 +58,40 @@ class BankAccount(models.Model):
     account_status = models.CharField(
         max_length=15, choices=ACCOUNT_STATUS_CHOICES, default="ACTIVE"
     )
+
+
+DEPOSIT = "DEPOSIT"
+WITHDRAWAL = "WITHDRAWAL"
+TRANSFER = "TRANSFER"
+
+TRANSACTION_TYPE_CHOICES = (
+    (DEPOSIT, "Deposit"),
+    (WITHDRAWAL, "Withdrawal"),
+    (TRANSFER, "Transfer"),
+)
+
+
+class Transaction(models.Model):
+    models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    fk_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
+    amount = MoneyField(
+        max_digits=14, decimal_places=2, default_currency="EUR", default=0
+    )
+    date = models.DateField(auto_now_add=True)
+    description = models.CharField(max_length=100, blank=True)
+    transaction_type = models.CharField(
+        max_length=15, choices=TRANSACTION_TYPE_CHOICES, default="DEPOSIT"
+    )
+
+    def save(self, *args, **kwargs):
+        self.fk_account.balance += self.amount
+        self.fk_account.save()
+        super(Transaction, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.fk_account.balance -= self.Amount
+        self.fk_account.save()
+        super(Transaction, self).delete(*args, **kwargs)
 
 
 class Depot(models.Model):
