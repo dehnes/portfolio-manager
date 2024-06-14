@@ -1,3 +1,88 @@
+from abc import abstractmethod
+
 from django.db import models
+from djmoney.models.fields import CurrencyField, MoneyField
+
+# Open TODOs:
+# TODO add Dividend Payments to Model
+# TODO add buy, sell, deposit, withdraw methods to Model
+
 
 # Create your models here.
+class Person(models.Model):
+    name = models.CharField(max_length=100, blank=False)
+    surname = models.CharField(max_length=100, blank=False)
+
+    def __str__(self):
+        return f"{self.surname} {self.name}"
+
+
+class Institute(models.Model):
+    name = models.CharField(max_length=100, blank=False)
+    bic = models.CharField(max_length=8, blank=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Portfolio(models.Model):
+    name = models.CharField(max_length=100, blank=False)
+    fk_owner = models.ForeignKey(
+        Person,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Depot(models.Model):
+    name = models.CharField(max_length=100, blank=False)
+    fk_institute = models.ForeignKey(Institute, on_delete=models.CASCADE)
+    fk_portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class Security(models.Model):
+    name = models.CharField(max_length=100, blank=False)
+
+    @abstractmethod
+    def get_actual_price(self) -> float: ...
+
+
+class Stock(Security):
+    wkn = models.CharField(max_length=15)
+    isin = models.CharField(max_length=25)
+
+    def get_actual_price(self) -> float:
+        pass
+        # TODO Implement get_actual_price in Model: Stock
+
+
+class ETF(Security):
+    wkn = models.CharField(max_length=15)
+    isin = models.CharField(max_length=25)
+
+    def get_actual_price(self) -> float:
+        pass
+        # TODO Implement get_actual_price in Model: ETF
+
+
+class Asset(models.Model):
+    security = models.ForeignKey(Security, on_delete=models.CASCADE, blank=False)
+    base_currency = CurrencyField(default="EUR", blank=False)
+
+
+class Batch(models.Model):
+    in_date = models.DateField(blank=False)
+    fk_asset = models.ForeignKey(Asset, on_delete=models.CASCADE, blank=False)
+
+
+class BatchPosition(models.Model):
+    quantity = models.DecimalField(max_digits=14, decimal_places=2, blank=False)
+    buyPrice = MoneyField(
+        blank=False, max_digits=14, decimal_places=2, default_currency="EUR"
+    )
+    fk_batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
