@@ -1,37 +1,78 @@
 {% extends "layouts/base.html" %}
 {% block breadcrumbs %}
-    test Breadcrumbs
+    Breadcrumbs go here
 {% endblock breadcrumbs %}
 {% block content %}
-    <p>this is the index Page of Portfolio</p>
     <!-- [ Main Content ] start -->
     <div class="row">
         <!--[ daily sales section ] start-->
-        <div class="col-md-6 col-xl-4">
-            <div class="card daily-sales">
-                <div class="card-block">
-                    <h6 class="mb-4">Daily Sales</h6>
-                    <div class="row d-flex align-items-center">
-                        <div class="col-9">
-                            <h3 class="f-w-300 d-flex align-items-center m-b-0">
-                                <i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$
-                                249.95
-                            </h3>
-                        </div>
-                        <div class="col-3 text-right">
-                            <p class="m-b-0">67%</p>
-                        </div>
+        {% for port in portfolios %}
+            <div class="col-md-12 col-xl-12">
+                <div class="card daily-sales">
+                    <div class="card-header">
+                        <h5>{{ port }}</h5>
                     </div>
-                    <div class="progress m-t-30" style="height: 7px;">
-                        <div class="progress-bar progress-c-theme"
-                             role="progressbar"
-                             style="width: 50%"
-                             aria-valuenow="50"
-                             aria-valuemin="0"
-                             aria-valuemax="100"></div>
+                    <div class="card-block">
+                        {% for depot in depots %}
+                            {% if port == depot.fk_portfolio %}
+                                <h6>{{ depot.name }} - {{ depot.fk_institute }}</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <small>WKN</small>
+                                                </th>
+                                                <th>
+                                                    <small>ISIN</small>
+                                                </th>
+                                                <th>
+                                                    <small>Security</small>
+                                                </th>
+                                                <th>
+                                                    <small>Quantity</small>
+                                                </th>
+                                                <th>
+                                                    <small>Balance</small>
+                                                </th>
+                                                <th>
+                                                    <small>Perf. absolute</small>
+                                                </th>
+                                                <th>
+                                                    <small>Perf. absolute annual</small>
+                                                </th>
+                                                <th>
+                                                    <small>Perf. YTD</small>
+                                                </th>
+                                                <th>
+                                                    <small>Actions</small>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for asset in assets %}
+                                                {% if asset.fk_depot == depot %}
+                                                    <tr>
+                                                        <td>{{ asset.fk_security.wkn }}</td>
+                                                        <td>{{ asset.fk_security.isin }}</td>
+                                                        <td>{{ asset.fk_security.name }}</td>
+                                                        <td>{{ asset.batch_positions_sum }}</td>
+                                                        <td>123 €</td>
+                                                        <td>0,0%</td>
+                                                        <td>0,0%</td>
+                                                        <td>0,0%</td>
+                                                        <td>Sell</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
     </div>
 {% endblock content %}

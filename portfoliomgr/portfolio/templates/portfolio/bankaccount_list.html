@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+{% block breadcrumbs %}
+    Breadcrumbs go here
+{% endblock breadcrumbs %}
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <div class="col-md-12 col-xl-12">
+            <div class="card daily-sales">
+                <div class="card-header">
+                    <h5>Accounts</h5>
+                </div>
+                <div class="card-block">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <small>IBAN</small>
+                                    </th>
+                                    <th>
+                                        <small>Name</small>
+                                    </th>
+                                    <th>
+                                        <small>Institute</small>
+                                    </th>
+                                    <th>
+                                        <small>Owner</small>
+                                    </th>
+                                    <th>
+                                        <small>Account Type</small>
+                                    </th>
+                                    <th>
+                                        <small>Balance</small>
+                                    </th>
+                                    <th>
+                                        <small>Transactions</small>
+                                    </th>
+                                    <th>
+                                        <small>Actions</small>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for object in object_list %}
+                                    <tr>
+                                        <td>{{ object.iban }}</td>
+                                        <td>{{ object.name }}</td>
+                                        <td>{{ object.fk_institute.short_name }}</td>
+                                        <td>{{ object.fk_owner }}</td>
+                                        <td>{{ object.account_type }}</td>
+                                        <td>{{ object.balance }}</td>
+                                        <td>
+                                            <a href="#" class="label theme-bg text-white f-12">withdraw</a>
+                                            <a href="#" class="label theme-bg2 text-white f-12">deposit</a>
+                                            <a href="#" class="label theme-bg2 text-white f-12">transfer</a>
+                                        </td>
+                                        <td>Other Actions</td>
+                                    </tr>
+                                {% empty %}
+                                    <!-- If object_list is empty  -->
+                                    <li>No objects yet.</li>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
