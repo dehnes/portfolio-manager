@@ -15,10 +15,10 @@
                     <div class="card-block">
                         {% for depot in depots %}
                             {% if port == depot.fk_portfolio %}
-                                <h6>{{ depot.name }} - {{ depot.fk_institute }}</h6>
-                                <div class="table-responsive">
+                                <h6 class="">{{ depot.name }} - {{ depot.fk_institute }}</h6>
+                                <div class="table-responsive px-3">
                                     <table class="table table-striped">
-                                        <thead>
+                                        <thead class="thead-light">
                                             <tr>
                                                 <th>
                                                     <small>WKN</small>
@@ -33,7 +33,10 @@
                                                     <small>Quantity</small>
                                                 </th>
                                                 <th>
-                                                    <small>Balance</small>
+                                                    <small>Stock Price</small>
+                                                </th>
+                                                <th>
+                                                    <small>Value</small>
                                                 </th>
                                                 <th>
                                                     <small>Perf. absolute</small>
@@ -53,23 +56,45 @@
                                             {% for asset in assets %}
                                                 {% if asset.fk_depot == depot %}
                                                     <tr>
-                                                        <td>{{ asset.fk_security.wkn }}</td>
-                                                        <td>{{ asset.fk_security.isin }}</td>
-                                                        <td>{{ asset.fk_security.name }}</td>
-                                                        <td>{{ asset.batch_positions_sum }}</td>
-                                                        <td>123 €</td>
+                                                        <td class="font-weight-bold text-primary">{{ asset.fk_security.wkn }}</td>
+                                                        <td class="font-weight-bold">{{ asset.fk_security.isin }}</td>
+                                                        <td class="font-weight-bold">{{ asset.fk_security.name }}</td>
+                                                        <td>{{ asset.batch_positions_sum }} Stck.</td>
+                                                        <td class="font-weight-bold">{{ asset.price|floatformat:2 }} €</td>
+                                                        <td class="font-weight-bold">{{ asset.balance|floatformat:2 }} €</td>
+                                                        <td class="text-success">{{ asset.test }}</td>
+                                                        <td class="text-danger">0,0%</td>
                                                         <td>0,0%</td>
-                                                        <td>0,0%</td>
-                                                        <td>0,0%</td>
-                                                        <td>Sell</td>
+                                                        <td>
+                                                            <a href="#" class="label theme-bg text-white f-12">sell</a>
+                                                            <a href="#" class="label theme-bg2 text-white f-12">details</a>
+                                                        </td>
                                                     </tr>
                                                 {% endif %}
                                             {% endfor %}
+                                            <tr class="table-dark">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{ depot.balance|floatformat:2 }} €</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
+                                <br>
                             {% endif %}
                         {% endfor %}
+                    </div>
+                    <div class="row text-right">
+                        <h3 class="f-w-300 d-flex align-items-center m-b-2 m-l-10 text-right">
+                            <i class="feather icon-arrow-up text-c-green f-30 m-r-10 text-right"></i> {{ port.balance }}
+                        </h3>
                     </div>
                 </div>
             </div>
