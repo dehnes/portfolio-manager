@@ -5,6 +5,7 @@ from django.db.models import Avg, CharField, F, FloatField, IntegerField, Min, S
 from django.shortcuts import render
 from django.views.generic.list import ListView
 
+from .forms import DepositForm
 from .market import get_market_price
 from .models import Asset, BankAccount, Depot, Portfolio
 
@@ -42,6 +43,28 @@ def index(request):
     context["assets"] = assets
 
     return render(request, "portfolio/index.html", context)
+
+
+def deposit(request):
+    if request.method == "POST":
+        form = DepositForm(request.POST)
+        if form.is_valid():
+
+            account = form.cleaned_data["fk_bank_account"]
+            value = form.cleaned_data["value"]
+            bdate = form.cleaned_data["booking_date"]
+
+            print(f"Bank: {account}")
+            print(f"Value: {value}")
+            print(f"Booking Date: {bdate}")
+            # BankAccount.objects.get(name=account).update(balance=F("balance") + value)
+            # BankAccount.objects.filter(account=account).update(
+            #    balance=F("balance") + value
+            # )
+            # return render(request, "portfolio/deposit_success.html", {"amount": amount})
+    else:
+        form = DepositForm()
+    return render(request, "portfolio/deposit.html", {"form": form})
 
 
 class BankAccountsList(ListView):

@@ -91,26 +91,32 @@ class BankAccount(models.Model):
 DEPOSIT = "DEPOSIT"
 WITHDRAWAL = "WITHDRAWAL"
 TRANSFER = "TRANSFER"
+SELL = "SELL"
+BUY = "BUY"
 
 TRANSACTION_TYPE_CHOICES = (
     (DEPOSIT, "Deposit"),
     (WITHDRAWAL, "Withdrawal"),
     (TRANSFER, "Transfer"),
+    (SELL, "Sell"),
+    (BUY, "Buy"),
+)
+DRAFT = "DRAFT"
+EXECUTED = "EXECUTED"
+FAILED = "FAILED"
+ROLLED_BACK = "ROLLED_BACK"
+
+TR_STATUS_CHOICES = (
+    (DRAFT, "Draft"),
+    (EXECUTED, "Executed"),
+    (FAILED, "Failed"),
+    (ROLLED_BACK, "Rolled back"),
 )
 
 
 class Transaction(models.Model):
     models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, verbose_name="UUID"
-    )
-    fk_account = models.ForeignKey(
-        BankAccount, on_delete=models.CASCADE, verbose_name="Account"
-    )
-    amount = MoneyField(
-        max_digits=14,
-        decimal_places=2,
-        default_currency="EUR",
-        default=0,
     )
 
     date = models.DateField(auto_now_add=True, verbose_name="Date")
@@ -121,6 +127,22 @@ class Transaction(models.Model):
         max_length=15,
         choices=TRANSACTION_TYPE_CHOICES,
         default="DEPOSIT",
+    )
+    status = models.CharField(max_length=11, choices=TR_STATUS_CHOICES, default=DRAFT)
+
+
+class AccountBooking(models.Model):
+    fk_bank_account = models.ForeignKey(
+        BankAccount, on_delete=models.CASCADE, blank=False, verbose_name="Bank Account"
+    )
+    fk_transaction = models.ForeignKey(
+        Transaction, on_delete=models.CASCADE, blank=False
+    )
+    value = models.DecimalField(
+        max_digits=14, decimal_places=2, blank=False, verbose_name="Value"
+    )
+    booking_date = models.DateField(
+        default=date.today, blank=False, verbose_name="Booking Date"
     )
 
 
