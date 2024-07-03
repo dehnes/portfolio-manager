@@ -11,7 +11,11 @@ class DateInput(forms.DateInput):
 class DepositForm(forms.ModelForm):
     class Meta:
         model = AccountBooking
-        exclude = ["fk_transaction"]
-        widgets = {
-            "booking_date": DateInput(),
-        }
+        fields = [
+            "fk_bank_account",
+            "fk_transaction",
+            "value",
+            "booking_date",
+            "description",
+        ]
+        widgets = {"booking_date": DateInput(), "fk_transaction": forms.HiddenInput()}

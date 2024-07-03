@@ -2,6 +2,7 @@
 from django.contrib import admin
 
 from .models import (
+    AccountBooking,
     Asset,
     BankAccount,
     Batch,
@@ -11,6 +12,7 @@ from .models import (
     Person,
     Portfolio,
     Security,
+    Transaction,
 )
 
 
@@ -79,6 +81,24 @@ class SecurityAdmin(admin.ModelAdmin):
     )
 
 
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = (
+        "date",
+        "description",
+        "transaction_type",
+        "status",
+    )
+
+
+class AccountBookingAdmin(admin.ModelAdmin):
+    list_display = (
+        "fk_bank_account",
+        "fk_transaction",
+        "value",
+        "booking_date",
+    )
+
+
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Portfolio, PortfolioAdmin)
 admin.site.register(Depot, DepotAdmin)
@@ -89,3 +109,5 @@ admin.site.register(Asset, AssetAdmin)
 admin.site.register(Batch, BatchAdmin)
 admin.site.register(BatchPosition, BatchPositionAdmin)
 admin.site.register(Security, SecurityAdmin)
+admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(AccountBooking, AccountBookingAdmin)

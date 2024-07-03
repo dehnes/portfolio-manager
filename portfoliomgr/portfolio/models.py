@@ -85,7 +85,7 @@ class BankAccount(models.Model):
     )
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.name} ({self.fk_institute.short_name})"
 
 
 DEPOSIT = "DEPOSIT"
@@ -120,8 +120,8 @@ class Transaction(models.Model):
     )
 
     date = models.DateField(auto_now_add=True, verbose_name="Date")
-    description = models.CharField(
-        max_length=100, blank=True, verbose_name="Description"
+    description = models.TextField(
+        max_length=500, blank=True, verbose_name="Description"
     )
     transaction_type = models.CharField(
         max_length=15,
@@ -143,6 +143,9 @@ class AccountBooking(models.Model):
     )
     booking_date = models.DateField(
         default=date.today, blank=False, verbose_name="Booking Date"
+    )
+    description = models.TextField(
+        max_length=500, blank=True, verbose_name="Description"
     )
 
 

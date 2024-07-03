@@ -1,0 +1,103 @@
+{% extends "layouts/base.html" %}
+{% block breadcrumbs %}
+    Breadcrumbs go here
+{% endblock breadcrumbs %}
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <!--[ daily sales section ] start-->
+        {% for port in portfolios %}
+            <div class="col-md-12 col-xl-12">
+                <div class="card daily-sales">
+                    <div class="card-header">
+                        <h5>{{ port }}</h5>
+                    </div>
+                    <div class="card-block">
+                        {% for depot in depots %}
+                            {% if port == depot.fk_portfolio %}
+                                <h6>{{ depot.name }} - {{ depot.fk_institute }}</h6>
+                                <div class="table-responsive px-3">
+                                    <table class="table table-striped">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>
+                                                    <small>WKN</small>
+                                                </th>
+                                                <th>
+                                                    <small>ISIN</small>
+                                                </th>
+                                                <th>
+                                                    <small>Security</small>
+                                                </th>
+                                                <th>
+                                                    <small>Quantity</small>
+                                                </th>
+                                                <th>
+                                                    <small>Stock Price</small>
+                                                </th>
+                                                <th>
+                                                    <small>Value</small>
+                                                </th>
+                                                <th>
+                                                    <small>Perf. absolute</small>
+                                                </th>
+                                                <th>
+                                                    <small>Perf. absolute annual</small>
+                                                </th>
+                                                <th>
+                                                    <small>Perf. YTD</small>
+                                                </th>
+                                                <th>
+                                                    <small>Actions</small>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for asset in assets %}
+                                                {% if asset.fk_depot == depot %}
+                                                    <tr>
+                                                        <td class="font-weight-bold text-primary">{{ asset.fk_security.wkn }}</td>
+                                                        <td class="font-weight-bold">{{ asset.fk_security.isin }}</td>
+                                                        <td class="font-weight-bold">{{ asset.fk_security.name }}</td>
+                                                        <td>{{ asset.batch_positions_sum }} Stck.</td>
+                                                        <td class="font-weight-bold">{{ asset.price|floatformat:2 }} €</td>
+                                                        <td class="font-weight-bold">{{ asset.balance|floatformat:2 }} €</td>
+                                                        <td class="text-success">{{ asset.test }}</td>
+                                                        <td class="text-danger">0,0%</td>
+                                                        <td>0,0%</td>
+                                                        <td>
+                                                            <a href="#" class="label theme-bg text-white f-12">sell</a>
+                                                            <a href="#" class="label theme-bg2 text-white f-12">details</a>
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <tr class="table-dark">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{ depot.balance|floatformat:2 }} €</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="row text-right">
+                        <h3 class="f-w-300 d-flex align-items-center m-b-2 m-l-10 text-right">
+                            <i class="feather icon-arrow-up text-c-green f-30 m-r-10 text-right"></i> {{ port.balance }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

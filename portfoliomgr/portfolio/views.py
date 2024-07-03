@@ -1,16 +1,41 @@
 import pprint
 from dataclasses import dataclass
+from typing import Any
 
+from django.contrib import messages
 from django.db.models import Avg, CharField, F, FloatField, IntegerField, Min, Sum
 from django.shortcuts import render
+from django.views.generic import View
 from django.views.generic.list import ListView
 
 from .forms import DepositForm
 from .market import get_market_price
-from .models import Asset, BankAccount, Depot, Portfolio
+from .models import (
+    AccountBooking,
+    Asset,
+    BankAccount,
+    Depot,
+    Person,
+    Portfolio,
+    Security,
+    Transaction,
+)
 
 
 def index(request):
+    context = {}
+
+    persons = Person.objects.all()
+    securities = Security.objects.all()
+    for sec in securities:
+        sec.price = get_market_price(sec.ticker_symbol)
+
+    context["persons"] = persons
+    context["securities"] = securities
+    return render(request, "portfolio/index.html", context)
+
+
+def portfolios(request):
     context = {}
 
     assets = Asset.objects.annotate(
@@ -42,7 +67,7 @@ def index(request):
     context["depots"] = depots
     context["assets"] = assets
 
-    return render(request, "portfolio/index.html", context)
+    return render(request, "portfolio/portfolios.html", context)
 
 
 def deposit(request):
@@ -64,7 +89,33 @@ def deposit(request):
             # return render(request, "portfolio/deposit_success.html", {"amount": amount})
     else:
         form = DepositForm()
-    return render(request, "portfolio/deposit.html", {"form": form})
+    return render(
+        request,
+        "portfolio/deposit.html",
+    )
+
+
+class Deposit(View):
+    context = {}
+
+    def get(self, request):
+        self.context["form"] = DepositForm()
+        return render(request, "portfolio/deposit.html", self.context)
+
+    def form_valid(self, form):
+        booking = form.save(commit=False)
+        t = Transaction()
+        t.description = form.cleaned_data("description")
+        t.save()
+        form.fk_transaction = t
+        return super(Deposit, self).form_valid(form)
+
+    def post(self, request):
+        f = DepositForm(request.POST)
+        if f.is_valid():
+            self.form_valid(f)
+            f.save()
+        return render(request, "portfolio/deposit.html", {})
 
 
 class BankAccountsList(ListView):
