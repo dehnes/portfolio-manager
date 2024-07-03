@@ -1,0 +1,54 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block breadcrumbs %}
+{% endblock breadcrumbs %}
+{% block content %}
+  <!-- [ Main Content ] start -->
+  <div class="row">
+    <!--[ Recent Users ] start-->
+    <div class="col-xl-8 col-md-6">
+      <div class="card Recent-Users">
+        <div class="card-header">
+          <h5>{{ port }}</h5>
+        </div>
+      </div>
+    </div>
+    {% for depot in depots %}
+      <div class="col-xl-8 col-md-6">
+        <div class="card Recent-Users">
+          <div class="card-header">
+            <h6>{{ depot.name }} - {{ depot.fk_institute.short_name }}</h6>
+          </div>
+          <div class="card-block px-0 py-3">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <tbody>
+                  {% for asset in assets %}
+                    {% if asset.fk_depot == depot %}
+                      <tr>
+                        <td class="font-weight-bold text-primary">{{ asset.fk_security.wkn }}</td>
+                        <td class="font-weight-bold">{{ asset.fk_security.isin }}</td>
+                        <td class="font-weight-bold">{{ asset.fk_security.name }}</td>
+                        <td>{{ asset.batch_positions_sum }} Stck.</td>
+                        <td class="font-weight-bold">{{ asset.price|floatformat:2 }} €</td>
+                        <td class="font-weight-bold">{{ asset.balance|floatformat:2 }} €</td>
+                        <td class="text-success">{{ asset.test }}</td>
+                        <td class="text-danger">0,0%</td>
+                        <td>0,0%</td>
+                        <td>
+                          <a href="#" class="label theme-bg text-white f-12">sell</a>
+                          <a href="#" class="label theme-bg2 text-white f-12">details</a>
+                        </td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <!-- [ Main Content ] end -->
+{% endblock content %}

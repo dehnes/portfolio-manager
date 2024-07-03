@@ -37,83 +37,47 @@
     <!--[ Recent Users ] start-->
     <div class="col-xl-8 col-md-6">
       <div class="card Recent-Users">
-        {% if products %}
-          <div class="card-header">
-            <h5>Products</h5>
+        <div class="card-header">
+          <h5>Portfolio Summaries</h5>
+        </div>
+        <div class="card-block px-0 py-3">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <tbody>
+                {% for port in portfolios %}
+                  <tr class="unread">
+                    <td>
+                      <img class="rounded-circle"
+                           style="width:40px"
+                           src="{% static 'assets/images/user/avatar-1.jpg' %}"
+                           alt="activity-user">
+                    </td>
+                    <td>
+                      <h6 class="mb-1">{{ port.fk_owner }}</h6>
+                      <p class="m-0">…</p>
+                    </td>
+                    <td>
+                      <h6>
+                        <p class="text-muted">Perf</p>
+                        <i class="feather icon-arrow-up-right text-c-green"></i> <span class="text-c-green">+5%</span>
+                      </h6>
+                    </td>
+                    <td>
+                      <h6>
+                        <p class="text-muted">Portfolio value:</p>
+                        <i class="feather icon-arrow-up-right text-c-green"></i> {{ port.balance|floatformat:"2g" }} €
+                      </h6>
+                    </td>
+                    <td>
+                      <a href="{% url 'portfolio' port.id %}"
+                         class="label theme-bg text-white f-12">Details</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
-          <div class="card-block px-0 py-3">
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <tbody>
-                  {% for p in products %}
-                    <tr class="unread">
-                      <td>
-                        <img class="rounded-circle"
-                             style="width:40px"
-                             src="{% static 'assets/images/user/avatar-1.jpg' %}"
-                             alt="activity-user">
-                      </td>
-                      <td>
-                        <h6 class="mb-1">{{ p.name }}</h6>
-                        <p class="m-0">{{ p.info }}</p>
-                      </td>
-                      <td>
-                        <h6 class="text-muted">
-                          <i class="fa-solid fa-cart-shopping"></i>
-                          <i class="fas fa-tag text-c-green f-10 m-r-15"></i>
-                          ${{ p.price }}
-                        </h6>
-                      </td>
-                      <td>
-                        <a href="#" class="label theme-bg2 text-white f-12">View</a>
-                        <a href="#" class="label theme-bg text-white f-12">Delete</a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        {% else %}
-          <div class="card-header">
-            <h5>Portfolio Summaries</h5>
-          </div>
-          <div class="card-block px-0 py-3">
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <tbody>
-                  {% for per in persons %}
-                    <tr class="unread">
-                      <td>
-                        <img class="rounded-circle"
-                             style="width:40px"
-                             src="{% static 'assets/images/user/avatar-1.jpg' %}"
-                             alt="activity-user">
-                      </td>
-                      <td>
-                        <h6 class="mb-1">{{ per }}</h6>
-                        <p class="m-0">…</p>
-                      </td>
-                      <td>
-                        <h6 class="text-muted">
-                          <i class="fa-solid fa-circle-up text-c-green f-10 m-r-15"></i>+5%
-                        </h6>
-                      </td>
-                      <td>
-                        <h6>
-                          <i class="feather icon-arrow-up-right text-c-green"></i> 12.200.000,00 €
-                        </h6>
-                      </td>
-                      <td>
-                        <a href="#!" class="label theme-bg text-white f-12">Details</a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        {% endif %}
+        </div>
       </div>
     </div>
   </div>
