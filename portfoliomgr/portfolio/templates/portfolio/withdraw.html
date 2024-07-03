@@ -1,0 +1,34 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    Breadcrumbs go here
+{% endblock breadcrumbs %}
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <div class="col-md-12 col-xl-12">
+            <div class="card daily-sales">
+                <div class="card-header">
+                    <h5>Withdraw</h5>
+                </div>
+                <!-- TODO put message to generic page layout -->
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li {% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="card-block">
+                    <div class="col-md-6">
+                        <form action="/withdraw/" method="post">
+                            {% csrf_token %}
+                            {{ form |crispy }}
+                            <input type="submit" value="Submit">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

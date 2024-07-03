@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.views.generic.list import ListView
 
-from .forms import DepositForm
+from .forms import DepositForm, WithdrawForm
 from .market import get_market_price
 from .models import Asset, BankAccount, Depot, Person, Portfolio, Security, Transaction
 
@@ -148,6 +148,19 @@ class Deposit(View):
             self.form_valid(f)
             f.save()
         return render(request, "portfolio/deposit.html", context=self.context)
+
+
+class Withdraw(View):
+    context = {}
+    context["sidebar"] = get_sidebar_context()
+
+    def get(self, request):
+        self.context["form"] = WithdrawForm()
+        return render(request, "portfolio/withdraw.html", self.context)
+
+    def post(self, request):
+
+        return render(request, "portfolio/withdraw.html", self.context)
 
 
 class BankAccountsList(ListView):

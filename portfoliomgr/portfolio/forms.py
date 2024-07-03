@@ -19,3 +19,16 @@ class DepositForm(forms.ModelForm):
             "description",
         ]
         widgets = {"booking_date": DateInput(), "fk_transaction": forms.HiddenInput()}
+
+
+class WithdrawForm(forms.ModelForm):
+    class Meta:
+        model = AccountBooking
+        fields = [
+            "fk_bank_account",
+            "fk_transaction",
+            "value",
+            "booking_date",
+            "description",
+        ]
+        widgets = {"booking_date": DateInput(), "fk_transaction": forms.HiddenInput()}
