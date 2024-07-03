@@ -25,6 +25,7 @@ class InstituteAdmin(admin.ModelAdmin):
         "bic",
         "name",
         "short_name",
+        "logo",
     )
 
 
@@ -44,7 +45,13 @@ class PortfolioAdmin(admin.ModelAdmin):
 
 
 class DepotAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        "name",
+        "fk_institute",
+        "fk_portfolio",
+        "fk_owner",
+        "is_active",
+    )
 
 
 class AssetAdmin(admin.ModelAdmin):

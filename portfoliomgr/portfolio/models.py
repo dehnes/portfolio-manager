@@ -3,6 +3,7 @@ from abc import abstractmethod
 from datetime import date
 
 from django.db import models
+from django_resized import ResizedImageField
 from djmoney.models.fields import CurrencyField, MoneyField
 
 from .market import get_market_price
@@ -16,6 +17,9 @@ from .market import get_market_price
 class Person(models.Model):
     name = models.CharField(max_length=100, blank=False, verbose_name="Name")
     surname = models.CharField(max_length=100, blank=False, verbose_name="Surname")
+    picture = ResizedImageField(
+        size=[500, 500], upload_to="profile_pics", force_format="PNG"
+    )
 
     def __str__(self):
         return f"{self.surname} {self.name}"
@@ -25,8 +29,9 @@ class Institute(models.Model):
     bic = models.CharField(max_length=12, blank=False, unique=True, verbose_name="BIC")
     name = models.CharField(max_length=100, blank=False, verbose_name="Name")
     short_name = models.CharField(
-        max_length=10, default="", blank=True, verbose_name="Short Name"
+        max_length=20, default="", blank=True, verbose_name="Short Name"
     )
+    logo = ResizedImageField(size=[300, 300], upload_to="logos", force_format="PNG")
 
     def __str__(self):
         return self.name
@@ -160,6 +165,7 @@ class Depot(models.Model):
         Portfolio, on_delete=models.CASCADE, verbose_name="Portfolio"
     )
     fk_owner = models.ForeignKey(Person, on_delete=models.CASCADE, verbose_name="Owner")
+    is_active = models.BooleanField(default=True, verbose_name="Active")
 
     def __str__(self):
         return f"{self.name} ({self.fk_owner.surname} - {self.fk_institute.short_name})"

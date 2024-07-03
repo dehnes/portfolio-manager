@@ -6,48 +6,100 @@
   <!-- [ Main Content ] start -->
   <div class="row">
     <!--[ Recent Users ] start-->
-    <div class="col-xl-8 col-md-6">
+    <div class="col-xl-9 col-md-6">
       <div class="card Recent-Users">
         <div class="card-header">
-          <h5>{{ port }}</h5>
+          <h5>
+            <img class="rounded-circle"
+                 style="width:50px"
+                 src="{{ port.fk_owner.picture.url }}"
+                 alt="pic"
+                 width="50"
+                 height="50" />
+            &nbsp;&nbsp;
+            {{ port }}
+          </h5>
         </div>
       </div>
     </div>
     {% for depot in depots %}
-      <div class="col-xl-8 col-md-6">
-        <div class="card Recent-Users">
-          <div class="card-header">
-            <h6>{{ depot.name }} - {{ depot.fk_institute.short_name }}</h6>
-          </div>
-          <div class="card-block px-0 py-3">
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <tbody>
-                  {% for asset in assets %}
-                    {% if asset.fk_depot == depot %}
-                      <tr>
-                        <td class="font-weight-bold text-primary">{{ asset.fk_security.wkn }}</td>
-                        <td class="font-weight-bold">{{ asset.fk_security.isin }}</td>
-                        <td class="font-weight-bold">{{ asset.fk_security.name }}</td>
-                        <td>{{ asset.batch_positions_sum }} Stck.</td>
-                        <td class="font-weight-bold">{{ asset.price|floatformat:2 }} €</td>
-                        <td class="font-weight-bold">{{ asset.balance|floatformat:2 }} €</td>
-                        <td class="text-success">{{ asset.test }}</td>
-                        <td class="text-danger">0,0%</td>
-                        <td>0,0%</td>
-                        <td>
-                          <a href="#" class="label theme-bg text-white f-12">sell</a>
-                          <a href="#" class="label theme-bg2 text-white f-12">details</a>
-                        </td>
-                      </tr>
-                    {% endif %}
-                  {% endfor %}
-                </tbody>
-              </table>
+      {% if depot.is_active %}
+        <div class="col-xl-9 col-md-6">
+          <div class="card Recent-Users">
+            <div class="card-header">
+              <h6>
+                <img src="{{ depot.fk_institute.logo.url }}"
+                     height="24"
+                     width="24"
+                     alt="logo">
+                &nbsp;Depot:
+                {{ depot.name }} - {{ depot.fk_institute.short_name }}
+              </h6>
+            </div>
+            <div class="card-block px-0 py-3">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="">
+                    <tr>
+                      <th>
+                        <small>WKN</small>
+                      </th>
+                      <th>
+                        <small>ISIN</small>
+                      </th>
+                      <th>
+                        <small>Security</small>
+                      </th>
+                      <th>
+                        <small>Quantity</small>
+                      </th>
+                      <th>
+                        <small>Stock Price</small>
+                      </th>
+                      <th>
+                        <small>Value</small>
+                      </th>
+                      <th>
+                        <small>Perf. absolute</small>
+                      </th>
+                      <th>
+                        <small>Perf. absolute annual</small>
+                      </th>
+                      <th>
+                        <small>Perf. YTD</small>
+                      </th>
+                      <th>
+                        <small>&nbsp;</small>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for asset in assets %}
+                      {% if asset.fk_depot == depot %}
+                        <tr>
+                          <td class="font-weight-bold text-primary">{{ asset.fk_security.wkn }}</td>
+                          <td class="font-weight-bold">{{ asset.fk_security.isin }}</td>
+                          <td class="font-weight-bold">{{ asset.fk_security.name }}</td>
+                          <td>{{ asset.batch_positions_sum }} Stck.</td>
+                          <td class="font-weight-bold">{{ asset.price|floatformat:"2g" }} €</td>
+                          <td class="font-weight-bold text-primary">{{ asset.balance|floatformat:"2g" }} €</td>
+                          <td class="text-danger">0,0%</td>
+                          <td class="text-success">0,0%</td>
+                          <td>0,0%</td>
+                          <td>
+                            <a href="#" class="label theme-bg text-white f-12">sell</a>
+                            <a href="#" class="label theme-bg2 text-white f-12">details</a>
+                          </td>
+                        </tr>
+                      {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      {% endif %}
     {% endfor %}
   </div>
   <!-- [ Main Content ] end -->

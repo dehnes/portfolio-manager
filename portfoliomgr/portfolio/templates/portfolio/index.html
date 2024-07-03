@@ -46,11 +46,13 @@
               <tbody>
                 {% for port in portfolios %}
                   <tr class="unread">
-                    <td>
+                    <td style="width: 1%;">
                       <img class="rounded-circle"
-                           style="width:40px"
-                           src="{% static 'assets/images/user/avatar-1.jpg' %}"
-                           alt="activity-user">
+                           style="width:50px"
+                           src="{{ port.fk_owner.picture.url }}"
+                           alt="pic"
+                           width="50"
+                           height="50" />
                     </td>
                     <td>
                       <h6 class="mb-1">{{ port.fk_owner }}</h6>

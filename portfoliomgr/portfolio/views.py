@@ -22,8 +22,15 @@ from .models import (
 )
 
 
+def get_sidebar_context():
+    context = {}
+    context["portfolios"] = Portfolio.objects.all()
+    return context
+
+
 def index(request):
     context = {}
+    context["sidebar"] = get_sidebar_context()
 
     # Get all relevant data
     persons = Person.objects.all()
@@ -66,6 +73,7 @@ def index(request):
 
 def portfolio(request, id):
     context = {}
+    context["sidebar"] = get_sidebar_context()
     port = Portfolio.objects.filter(id=id)[0]
     depots = Depot.objects.filter(fk_portfolio=port)
     assets = Asset.objects.annotate(
@@ -91,6 +99,7 @@ def portfolio(request, id):
 
 def portfolios(request):
     context = {}
+    context["sidebar"] = get_sidebar_context()
 
     assets = Asset.objects.annotate(
         batch_positions_sum=(Sum("batch__batch_positions__quantity")),
@@ -126,6 +135,8 @@ def portfolios(request):
 
 def deposit(request):
     if request.method == "POST":
+        context = {}
+        context["sidebar"] = get_sidebar_context()
         form = DepositForm(request.POST)
         if form.is_valid():
 
@@ -143,14 +154,12 @@ def deposit(request):
             # return render(request, "portfolio/deposit_success.html", {"amount": amount})
     else:
         form = DepositForm()
-    return render(
-        request,
-        "portfolio/deposit.html",
-    )
+    return render(request, "portfolio/deposit.html", context)
 
 
 class Deposit(View):
     context = {}
+    context["sidebar"] = get_sidebar_context()
 
     def get(self, request):
         self.context["form"] = DepositForm()
@@ -169,7 +178,7 @@ class Deposit(View):
         if f.is_valid():
             self.form_valid(f)
             f.save()
-        return render(request, "portfolio/deposit.html", {})
+        return render(request, "portfolio/deposit.html", context=self.context)
 
 
 class BankAccountsList(ListView):
