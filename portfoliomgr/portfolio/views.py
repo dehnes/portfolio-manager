@@ -1,36 +1,29 @@
+import logging
 import pprint
 from dataclasses import dataclass
-from typing import Any
 
 from django.contrib import messages
-from django.db.models import Avg, CharField, F, FloatField, IntegerField, Min, Sum
+from django.db.models import Sum
 from django.shortcuts import render
 from django.views.generic import View
 from django.views.generic.list import ListView
 
 from .forms import DepositForm
 from .market import get_market_price
-from .models import (
-    AccountBooking,
-    Asset,
-    BankAccount,
-    Depot,
-    Person,
-    Portfolio,
-    Security,
-    Transaction,
-)
+from .models import Asset, BankAccount, Depot, Person, Portfolio, Security, Transaction
+
+logger = logging.getLogger(__name__)
 
 
 def get_sidebar_context():
-    context = {}
-    context["portfolios"] = Portfolio.objects.all()
-    return context
+    return {"portfolios": Portfolio.objects.all()}
 
 
 def index(request):
     context = {}
     context["sidebar"] = get_sidebar_context()
+
+    logger.debug("This is a debug message")
 
     # Get all relevant data
     persons = Person.objects.all()
@@ -131,30 +124,6 @@ def portfolios(request):
     context["assets"] = assets
 
     return render(request, "portfolio/portfolios.html", context)
-
-
-def deposit(request):
-    if request.method == "POST":
-        context = {}
-        context["sidebar"] = get_sidebar_context()
-        form = DepositForm(request.POST)
-        if form.is_valid():
-
-            account = form.cleaned_data["fk_bank_account"]
-            value = form.cleaned_data["value"]
-            bdate = form.cleaned_data["booking_date"]
-
-            print(f"Bank: {account}")
-            print(f"Value: {value}")
-            print(f"Booking Date: {bdate}")
-            # BankAccount.objects.get(name=account).update(balance=F("balance") + value)
-            # BankAccount.objects.filter(account=account).update(
-            #    balance=F("balance") + value
-            # )
-            # return render(request, "portfolio/deposit_success.html", {"amount": amount})
-    else:
-        form = DepositForm()
-    return render(request, "portfolio/deposit.html", context)
 
 
 class Deposit(View):
