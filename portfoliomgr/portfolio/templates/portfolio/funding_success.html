@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    Breadcrumbs go here
+{% endblock breadcrumbs %}
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <div class="col-md-12 col-xl-12">
+            <div class="card daily-sales">
+                <div class="card-header">
+                    {% if fund == "w" %}
+                        <h5>Withdrawal successfull</h5>
+                    {% elif fund == "d" %}
+                        <h5>Deposit successfull</h5>
+                    {% endif %}
+                </div>
+                <div class="card-block">
+                    <div class="col-md-6">
+                        <p>What would you like to do next?</p>
+                        <a class="btn btn-primary" href="{% url 'deposit' %}" role="button">Make another Deposit</a>
+                        <a class="btn btn-primary" href="{% url 'withdraw' %}" role="button">Make another Withdrawl</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

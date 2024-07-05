@@ -135,6 +135,9 @@ class Transaction(models.Model):
     )
     status = models.CharField(max_length=11, choices=TR_STATUS_CHOICES, default=DRAFT)
 
+    def __str__(self):
+        return f"{self.transaction_type} - {self.date} - Status: {self.status}"
+
 
 class AccountBooking(models.Model):
     fk_bank_account = models.ForeignKey(

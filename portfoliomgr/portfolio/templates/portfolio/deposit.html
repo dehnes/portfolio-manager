@@ -21,9 +21,9 @@
                 {% endif %}
                 <div class="card-block">
                     <div class="col-md-6">
-                        <form action="/deposit/" method="post">
+                        <form action="{% url 'deposit' %}" method="post">
                             {% csrf_token %}
-                            {{ form |crispy }}
+                            {{ form|crispy }}
                             <input type="submit" value="Submit">
                         </form>
                     </div>

@@ -8,6 +8,6 @@ urlpatterns = [
     path("bankaccounts/", views.BankAccountsList.as_view(), name="bankaccounts"),
     path("portfolios/", views.portfolios, name="portfolios"),
     path("portfolios/<int:id>", views.portfolio, name="portfolio"),
-    path("deposit/", views.Deposit.as_view(), name="deposit"),
-    path("withdraw/", views.Withdraw.as_view(), name="withdraw"),
+    path("deposit/", views.deposit, name="deposit"),
+    path("withdraw/", views.withdraw, name="withdraw"),
 ]

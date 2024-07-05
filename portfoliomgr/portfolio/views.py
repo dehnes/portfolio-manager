@@ -4,13 +4,24 @@ from dataclasses import dataclass
 
 from django.contrib import messages
 from django.db.models import Sum
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import View
 from django.views.generic.list import ListView
 
 from .forms import DepositForm, WithdrawForm
 from .market import get_market_price
-from .models import Asset, BankAccount, Depot, Person, Portfolio, Security, Transaction
+from .models import (
+    DEPOSIT,
+    WITHDRAWAL,
+    AccountBooking,
+    Asset,
+    BankAccount,
+    Depot,
+    Person,
+    Portfolio,
+    Security,
+    Transaction,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -126,41 +137,40 @@ def portfolios(request):
     return render(request, "portfolio/portfolios.html", context)
 
 
-class Deposit(View):
-    context = {}
-    context["sidebar"] = get_sidebar_context()
-
-    def get(self, request):
-        self.context["form"] = DepositForm()
-        return render(request, "portfolio/deposit.html", self.context)
-
-    def form_valid(self, form):
-        booking = form.save(commit=False)
-        t = Transaction()
-        t.description = form.cleaned_data("description")
-        t.save()
-        form.fk_transaction = t
-        return super(Deposit, self).form_valid(form)
-
-    def post(self, request):
-        f = DepositForm(request.POST)
-        if f.is_valid():
-            self.form_valid(f)
-            f.save()
-        return render(request, "portfolio/deposit.html", context=self.context)
+def deposit(request):
+    if request.method == "POST":
+        form = DepositForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.instance.fk_transaction = Transaction.objects.create()
+            form.instance.fk_transaction.description = form.cleaned_data["description"]
+            form.instance.fk_transaction.save()
+            form.save()
+            return render(request, "portfolio/funding_success.html", {"fund": "d"})
+        else:
+            logger.error("Error: DepositForm is not valid!")
+    else:
+        form = DepositForm()
+    return render(request, "portfolio/deposit.html", {"form": form})
 
 
-class Withdraw(View):
-    context = {}
-    context["sidebar"] = get_sidebar_context()
+def withdraw(request):
+    if request.method == "POST":
+        form = WithdrawForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.instance.fk_transaction = Transaction.objects.create()
+            form.instance.fk_transaction.description = form.cleaned_data["description"]
+            form.instance.fk_transaction.transaction_type = WITHDRAWAL
+            form.instance.value = float(form.cleaned_data["value"]) * (-1)
+            form.instance.fk_transaction.save()
+            form.save()
+            return render(request, "portfolio/funding_success.html", {"fund": "w"})
 
-    def get(self, request):
-        self.context["form"] = WithdrawForm()
-        return render(request, "portfolio/withdraw.html", self.context)
+        else:
+            logger.error("Error: WithdrawForm is not valid!")
+    else:
+        form = WithdrawForm()
 
-    def post(self, request):
-
-        return render(request, "portfolio/withdraw.html", self.context)
+    return render(request, "portfolio/withdraw.html", {"form": form})
 
 
 class BankAccountsList(ListView):

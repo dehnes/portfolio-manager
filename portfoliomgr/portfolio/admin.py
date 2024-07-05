@@ -102,6 +102,7 @@ class AccountBookingAdmin(admin.ModelAdmin):
         "fk_bank_account",
         "fk_transaction",
         "value",
+        "description",
         "booking_date",
     )
 
