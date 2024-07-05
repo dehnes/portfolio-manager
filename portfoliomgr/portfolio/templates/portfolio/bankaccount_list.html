@@ -46,7 +46,13 @@
                                     <tr>
                                         <td>{{ object.iban }}</td>
                                         <td>{{ object.name }}</td>
-                                        <td>{{ object.fk_institute.short_name }}</td>
+                                        <td>
+                                            <img src="{{ object.fk_institute.logo.url }}"
+                                                 height="20"
+                                                 width="20"
+                                                 alt="logo">
+                                            {{ object.fk_institute.short_name }}
+                                        </td>
                                         <td>{{ object.fk_owner }}</td>
                                         <td>{{ object.account_type }}</td>
                                         <td>{{ object.balance }}</td>
@@ -55,7 +61,10 @@
                                             <a href="#" class="label theme-bg2 text-white f-12">deposit</a>
                                             <a href="#" class="label theme-bg2 text-white f-12">transfer</a>
                                         </td>
-                                        <td>Other Actions</td>
+                                        <td>
+                                            <a href="{% url 'bankaccount' object.id %}"
+                                               class="label theme-bg text-white f-12">Details</a>
+                                        </td>
                                     </tr>
                                 {% empty %}
                                     <!-- If object_list is empty  -->

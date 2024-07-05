@@ -175,3 +175,16 @@ def withdraw(request):
 
 class BankAccountsList(ListView):
     model = BankAccount
+
+
+def bankaccount(request, id):
+    account = BankAccount.objects.filter(id=id)[0]
+    bookings = AccountBooking.objects.filter(fk_bank_account=account)
+    balance = 0.0
+    for booking in bookings:
+        balance += float(booking.value)
+    return render(
+        request,
+        "portfolio/bankaccount.html",
+        {"account": account, "bookings": bookings, "balance": balance},
+    )

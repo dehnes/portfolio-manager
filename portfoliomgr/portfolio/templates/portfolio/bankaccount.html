@@ -1,0 +1,119 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    Breadcrumbs go here
+{% endblock breadcrumbs %}
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <!-- Details -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>
+                        <img src="{{ account.fk_institute.logo.url }}"
+                             height="32"
+                             width="32"
+                             alt="logo">
+                        {{ account }}
+                    </h5>
+                </div>
+                <div class="card-block">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-12">
+                            <h3>Balance:&nbsp;{{ balance|floatformat:"2g" }} €</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Details</h5>
+                </div>
+                <div class="card-block">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-12">
+                            <p class="d-flex align-items-left m-b-0">Institute: {{ account.fk_institute }}</p>
+                            <p class="d-flex align-items-left m-b-0">IBAN: {{ account.iban }}</p>
+                            <p class="d-flex align-items-left m-b-0">BIC: {{ account.fk_institute.bic }}</p>
+                            <p class="d-flex align-items-left m-b-0">Owner: {{ account.fk_owner }}</p>
+                            <p class="d-flex align-items-left m-b-0">Account Type: {{ account.account_type }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="col-md-12 col-xl-4">
+            <div class="card daily-sales">
+                <div class="card-header">
+                    <h5>Actions</h5>
+                </div>
+                <div class="card-block">
+                    <div class="col-md-6">
+                        <p>
+                            <a class="label theme-bg text-white f-12 btn-block"
+                               href="{% url 'deposit' %}"
+                               role="button"><i class="feather icon-upload"></i>&nbsp;Deposit</a>
+                        </p>
+                        <p>
+                            <a class="label theme-bg text-white f-12 btn-block"
+                               href="{% url 'withdraw' %}"
+                               role="button"><i class="feather icon-download"></i>&nbsp;Withdraw</a>
+                        </p>
+                        <p>
+                            <a class="label theme-bg text-white f-12 btn-block"
+                               href="#"
+                               role="button"><i class="feather icon-shopping-cart"></i>&nbsp;Buy Stock</a>
+                        </p>
+                        <p>
+                            <a class="label theme-bg text-white f-12 btn-block"
+                               href="#"
+                               role="button"><i class="feather icon-tag"></i>&nbsp;Sell Stock</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bookings -->
+        <div class="col-md-12 col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Bookings</h5>
+                </div>
+                <div class="card-block">
+                    {% if bookings %}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-right px-10">Date</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th class="text-right px-10">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                    <tr>
+                                        <td class="text-right px-10">{{ booking.booking_date }}</td>
+                                        <td>{{ booking.fk_transaction.transaction_type }}</td>
+                                        <td>{{ booking.description }}</td>
+                                        {% if booking.value < 0 %}
+                                            <td class="text-right px-10 text-c-red">{{ booking.value }} €</td>
+                                        {% else %}
+                                            <td class="text-right px-10 text-c-green">{{ booking.value }} €</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No bookings found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
