@@ -1,9 +1,8 @@
 from django import forms
 from djmoney.forms import MoneyField
-from djmoney.models import CURRENCY_CHOICES
-from moneyed import Decimal 
+from moneyed import Decimal
 
-from .models import AccountBooking, BankAccount, Depot, Security, Transaction,
+from .models import AccountBooking, BankAccount, Depot, Security, Transaction
 
 
 class DateInput(forms.DateInput):
@@ -44,7 +43,7 @@ class BuyForm(forms.Form):
         queryset=BankAccount.objects.all(), label="Bank Account"
     )
     depot = forms.ModelChoiceField(queryset=Depot.objects.all(), label="Depot")
-    buy_date = forms.DateField(widget=forms.DateInput(), localize=True)
+    buy_date = forms.DateField(widget=DateInput(), localize=True)
     description = forms.CharField(
         label="Description", max_length=500, widget=forms.Textarea()
     )
@@ -76,7 +75,6 @@ class BuyForm(forms.Form):
     # BATCH POSITION 2
     quantity_2 = forms.DecimalField(max_digits=14, decimal_places=2, label="Quantity 2")
     price_2 = MoneyField(
-        currency_choices=CURRENCY_CHOICES,
         max_digits=14,
         min_value=0,
         default_amount=Decimal("0.0"),
@@ -84,7 +82,6 @@ class BuyForm(forms.Form):
         label="Price 2",
     )
     buy_fee_2 = MoneyField(
-        currency_choices=CURRENCY_CHOICES,
         max_digits=14,
         min_value=0,
         default_amount=Decimal("0.0"),
@@ -92,7 +89,6 @@ class BuyForm(forms.Form):
         label="Buy Fee",
     )
     yearly_fee_2 = MoneyField(
-        currency_choices=CURRENCY_CHOICES,
         max_digits=14,
         min_value=0,
         default_amount=Decimal("0.0"),

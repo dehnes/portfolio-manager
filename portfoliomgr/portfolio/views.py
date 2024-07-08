@@ -276,7 +276,7 @@ def buy(request):
             )
             logger.debug(f"Creating AccountBooking 1{COMP}")
 
-            # Eine BatchpositionBooking anlegen #TODO Create Model
+            # Eine BatchpositionBooking anlegen
             logger.debug(f"Creating BatchPositionBooking 1{STAR}")
             BatchPositionBooking.objects.create(
                 fk_batch_position=bp1,
@@ -330,12 +330,12 @@ def buy(request):
             # TODO implement
             logger.debug(f"Saving Transaction{COMP}")
 
-            return render(request, "buy_success.html")
+            return render(request, "portfolio/buy_success.html")
         else:
             logger.info("Form is invalid")
             # TODO Add Error Messages
-            return render(request, "buy.html", {"form": form})
+            return render(request, "portfolio/buy.html", {"form": form})
 
     else:
         form = BuyForm()
-        return render(request, "buy.html", {"form": form})
+        return render(request, "portfolio/buy.html", {"form": form})
