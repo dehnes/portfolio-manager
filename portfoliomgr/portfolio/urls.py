@@ -10,4 +10,5 @@ urlpatterns = [
     path("portfolios/<int:id>", views.portfolio, name="portfolio"),
     path("deposit/", views.deposit, name="deposit"),
     path("withdraw/", views.withdraw, name="withdraw"),
+    path("buy/", views.buy, name="buy"),
 ]

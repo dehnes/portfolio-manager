@@ -8,14 +8,19 @@ from django.shortcuts import redirect, render
 from django.views.generic import View
 from django.views.generic.list import ListView
 
-from .forms import DepositForm, WithdrawForm
+from .forms import BuyForm, DepositForm, WithdrawForm
 from .market import get_market_price
 from .models import (
+    BUY,
     DEPOSIT,
+    DRAFT,
     WITHDRAWAL,
     AccountBooking,
     Asset,
     BankAccount,
+    Batch,
+    BatchPosition,
+    BatchPositionBooking,
     Depot,
     Person,
     Portfolio,
@@ -188,3 +193,149 @@ def bankaccount(request, id):
         "portfolio/bankaccount.html",
         {"account": account, "bookings": bookings, "balance": balance},
     )
+
+
+COMP = "...[completed]"  # TODO refactor
+STAR = "..."  # TODO refactor
+
+
+def buy(request):
+    def get_description_string(
+        security: str, description: str, date, batch_position: int = 0
+    ) -> str:
+        if batch_position == 0:
+            return f"BUY: {security} - {description} - [{date}]"
+        else:
+            return (
+                f"BUY: {security} - {description} - [{date}] - BATCH {batch_position}"
+            )
+
+    logger.debug(f"Request method is: {request.method}")
+    if request.method == "POST":
+        form = BuyForm(request.POST, request.FILES)
+        if form.is_valid():
+            logger.debug("Form is valid")
+
+            # DATA extraction:
+            logger.debug(f"Extracting cleaned data from form{STAR}")
+            sec = form.cleaned_data["security"]
+            q1 = form.cleaned_data["quantity_1"]
+            fee1 = form.cleaned_data["buy_fee_1"]
+            yfee1 = form.cleaned_data["yearly_fee_1"]
+            q2 = form.cleaned_data["quantity_2"]
+            fee2 = form.cleaned_data["buy_fee_2"]
+            yfee2 = form.cleaned_data["yearly_fee_2"]
+            bdate = form.cleaned_data["buy_date"]
+            descr = form.cleaned_data["description"]
+            logger.debug(f"Extracting cleaned data from form{COMP}")
+
+            logger.debug(f"Creating Transaction{STAR}")
+            # Eine Transaction anlegen (DRAFT)
+            trans = Transaction.objects.create(
+                date=bdate,
+                description=get_description_string(
+                    security=sec, description=descr, date=bdate
+                ),
+                transaction_type=BUY,
+                status=DRAFT,
+            )
+            logger.debug(f"Creating Transaction...{COMP}")
+
+            logger.debug(f"Handling Asset{STAR}")
+            # Wenn das Asset im Depot noch nicht vorhanden ist, anlegen
+            asset = (
+                Asset.objects.create()
+            )  # FIXME Das asset auswählen, das Asset muss einen combine PK haben, im Model
+            logger.debug(f"Handling Asset{COMP}")
+
+            # Einen neuen Batch anlegen
+            logger.debug(f"Creating Batch{STAR}")
+            batch = Batch.objects.create(in_date=bdate, fk_asset=asset)
+            logger.debug(f"Creating Batch{COMP}")
+
+            # Die erste BatchPosition anlegen
+            logger.debug(f"Creating BatchPosition 1{STAR}")
+            bp1 = BatchPosition.objects.create(
+                quantity=q1,
+                buy_fee=fee1,
+                yearly_fee=yfee1,
+                fk_batch=batch,
+            )
+            logger.debug(f"Creating BatchPosition 1{COMP}")
+
+            # Eine Account Booking anlegen
+            logger.debug(f"Creating AccountBooking 1{STAR}")
+            ab1 = AccountBooking.objects.create(
+                fk_bank_account=form.bank_account,
+                fk_transaction=trans,
+                value=(-1) * (q1 * fee1),
+                booking_date=bdate,
+                description=get_description_string(
+                    security=sec, description=descr, date=bdate, batch_position=1
+                ),
+            )
+            logger.debug(f"Creating AccountBooking 1{COMP}")
+
+            # Eine BatchpositionBooking anlegen #TODO Create Model
+            logger.debug(f"Creating BatchPositionBooking 1{STAR}")
+            BatchPositionBooking.objects.create(
+                fk_batch_position=bp1,
+                fk_transaction=trans,
+                quantity=q1,
+                booking_date=bdate,
+                description=get_description_string(
+                    security=sec, description=descr, date=bdate, batch_position=1
+                ),
+            )
+            logger.debug(f"Creating BatchPositionBooking 1{COMP}")
+
+            # Die zweite Batchposition anlegen
+            if float(q2 > 0.0):
+                logger.debug(f"Creating BatchPosition 2{STAR}")
+                bp2 = BatchPosition.objects.create(
+                    quantity=q2,
+                    buy_fee=fee2,
+                    yearly_fee=yfee2,
+                    fk_batch=batch,
+                )
+                logger.debug(f"Creating BatchPosition 2{COMP}")
+
+                logger.debug(f"Creating AccountBooking 2{STAR}")
+                AccountBooking.objects.create(
+                    fk_bank_account=form.bank_account,
+                    fk_transaction=trans,
+                    value=(-1) * (q2 * fee2),
+                    booking_date=bdate,
+                    description=get_description_string(
+                        security=sec, description=descr, date=bdate, batch_position=2
+                    ),
+                )
+                logger.debug(f"Creating AccountBooking 2{COMP}")
+
+                logger.debug(f"Creating BatchPositionBooking 2{STAR}")
+                BatchPositionBooking.objects.create(
+                    fk_batch_position=bp2,
+                    fk_transaction=trans,
+                    quantity=q2,
+                    booking_date=bdate,
+                    description=get_description_string(
+                        security=sec, description=descr, date=bdate, batch_position=2
+                    ),
+                )
+                logger.debug(f"Creating BatchPositionBooking 2{COMP}")
+
+            # Transaction Type (EXECUTED)
+            logger.debug(f"Saving Transaction{STAR}")
+            logger.error("Transaction handling not implemted!!")
+            # TODO implement
+            logger.debug(f"Saving Transaction{COMP}")
+
+            return render(request, "buy_success.html")
+        else:
+            logger.info("Form is invalid")
+            # TODO Add Error Messages
+            return render(request, "buy.html", {"form": form})
+
+    else:
+        form = BuyForm()
+        return render(request, "buy.html", {"form": form})

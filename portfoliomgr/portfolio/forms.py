@@ -1,6 +1,9 @@
 from django import forms
+from djmoney.forms import MoneyField
+from djmoney.models import CURRENCY_CHOICES
+from moneyed import Decimal 
 
-from .models import AccountBooking, Transaction
+from .models import AccountBooking, BankAccount, Depot, Security, Transaction,
 
 
 class DateInput(forms.DateInput):
@@ -24,3 +27,75 @@ class WithdrawForm(forms.ModelForm):
         exclude = ("fk_transaction",)
         localized_fields = ["booking_date"]
         widgets = {"booking_date": DateInput()}
+
+
+class BuyStockForm(forms.Form):
+    security = forms.ChoiceField(label="Security")
+    quantity_1 = forms.IntegerField()
+    price_2 = forms.DecimalField(max_digits=10, decimal_places=2)
+    quantity_1 = forms.IntegerField()
+    price_2 = forms.DecimalField(max_digits=10, decimal_places=2)
+    fee = forms.DecimalField(max_digits=10, decimal_places=2)
+
+
+class BuyForm(forms.Form):
+    security = forms.ModelChoiceField(queryset=Security.objects.all(), label="Security")
+    bank_account = forms.ModelChoiceField(
+        queryset=BankAccount.objects.all(), label="Bank Account"
+    )
+    depot = forms.ModelChoiceField(queryset=Depot.objects.all(), label="Depot")
+    buy_date = forms.DateField(widget=forms.DateInput(), localize=True)
+    description = forms.CharField(
+        label="Description", max_length=500, widget=forms.Textarea()
+    )
+
+    # BATCH POSITION 1
+    quantity_1 = forms.DecimalField(max_digits=14, decimal_places=2, label="Quantity 1")
+    price_1 = MoneyField(
+        max_digits=14,
+        min_value=0,
+        default_amount=Decimal("0.0"),
+        default_currency="EUR",
+        label="Price 1",
+    )
+    buy_fee_1 = MoneyField(
+        max_digits=14,
+        min_value=0,
+        default_amount=Decimal("0.0"),
+        default_currency="EUR",
+        label="Buy Fee",
+    )
+    yearly_fee_1 = MoneyField(
+        max_digits=14,
+        min_value=0,
+        default_amount=Decimal("0.0"),
+        default_currency="EUR",
+        label="Yearly Fee",
+    )
+
+    # BATCH POSITION 2
+    quantity_2 = forms.DecimalField(max_digits=14, decimal_places=2, label="Quantity 2")
+    price_2 = MoneyField(
+        currency_choices=CURRENCY_CHOICES,
+        max_digits=14,
+        min_value=0,
+        default_amount=Decimal("0.0"),
+        default_currency="EUR",
+        label="Price 2",
+    )
+    buy_fee_2 = MoneyField(
+        currency_choices=CURRENCY_CHOICES,
+        max_digits=14,
+        min_value=0,
+        default_amount=Decimal("0.0"),
+        default_currency="EUR",
+        label="Buy Fee",
+    )
+    yearly_fee_2 = MoneyField(
+        currency_choices=CURRENCY_CHOICES,
+        max_digits=14,
+        min_value=0,
+        default_amount=Decimal("0.0"),
+        default_currency="EUR",
+        label="Yearly Fee",
+    )

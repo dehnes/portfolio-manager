@@ -194,6 +194,9 @@ class Security(models.Model):
 
 
 class Asset(models.Model):
+    class Meta:
+        unique_together = ["fk_security", "fk_depot"]
+
     fk_security = models.ForeignKey(
         Security,
         on_delete=models.CASCADE,
@@ -288,3 +291,24 @@ class DividendPayment(models.Model):
 
     def __str__(self) -> str:
         return f"{self.fk_asset} - Quantity: {self.count} - Total: {self.value_each}€"
+
+
+class BatchPositionBooking(models.Model):
+    fk_batch_position = models.ForeignKey(
+        BatchPosition,
+        on_delete=models.CASCADE,
+        blank=False,
+        verbose_name="Batch Position",
+    )
+    fk_transaction = models.ForeignKey(
+        Transaction, on_delete=models.CASCADE, blank=False, verbose_name="Transaction"
+    )
+    quantity = models.DecimalField(
+        max_digits=14, decimal_places=2, blank=False, verbose_name="Quantity"
+    )
+    booking_date = models.DateField(
+        default=date.today, blank=False, verbose_name="Booking Date"
+    )
+    description = models.TextField(
+        max_length=500, blank=True, verbose_name="Description"
+    )
