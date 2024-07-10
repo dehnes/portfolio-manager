@@ -25,13 +25,6 @@ class BankAccount(models.Model):
     fk_institute = models.ForeignKey(
         Institute, on_delete=models.CASCADE, verbose_name="Institute", default=0
     )
-    balance = MoneyField(
-        max_digits=14,
-        decimal_places=2,
-        default_currency="EUR",
-        default=0,
-        verbose_name="Balance",
-    )
     fk_owner = models.ForeignKey(
         Person, on_delete=models.CASCADE, verbose_name="Owner", default=0
     )

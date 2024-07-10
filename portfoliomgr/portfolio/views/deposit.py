@@ -19,7 +19,7 @@ def deposit(request):
             form.instance.fk_transaction.description = form.cleaned_data["description"]
             form.instance.fk_transaction.save()
             form.save()
-            context["fund", "d"]
+            context["fund"] = "d"
             return render(request, "portfolio/funding_success.html", context)
         else:
             logger.error("Error: DepositForm is not valid!")

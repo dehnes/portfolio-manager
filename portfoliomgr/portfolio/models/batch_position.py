@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from djmoney.models.fields import MoneyField
 from moneyed import Decimal
@@ -48,4 +50,9 @@ class BatchPosition(models.Model):
         blank=False,
         related_name="batch_positions",
     )
+    blocking_date = models.DateField(blank=True, null=True)
     comment = models.CharField(max_length=100, blank=True)
+
+    @property
+    def is_blocked(self) -> bool:
+        return self.blocking_date >= datetime.datetime.now()

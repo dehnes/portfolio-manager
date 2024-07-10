@@ -22,7 +22,7 @@ def withdraw(request):
             form.instance.value = float(form.cleaned_data["value"]) * (-1)
             form.instance.fk_transaction.save()
             form.save()
-            context["fund", "w"]
+            context["fund"] = "w"
             return render(request, "portfolio/funding_success.html", context)
 
         else:

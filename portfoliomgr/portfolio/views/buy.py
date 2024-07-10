@@ -45,14 +45,14 @@ def buy(request):
             # Position 1
             q1 = form.cleaned_data["quantity_1"]
             price1 = form.cleaned_data["price_1"]
-            fee1 = form.cleaned_data["buy_fee_1"]
-            yfee1 = form.cleaned_data["yearly_fee_1"]
+            buyfee1 = form.cleaned_data["buy_fee_1"]
+            yearfee1 = form.cleaned_data["yearly_fee_1"]
             c1 = form.cleaned_data["comment_1"]
             # Position 2
             q2 = form.cleaned_data["quantity_2"]
             price2 = form.cleaned_data["price_2"]
-            fee2 = form.cleaned_data["buy_fee_2"]
-            yfee2 = form.cleaned_data["yearly_fee_2"]
+            buyfee2 = form.cleaned_data["buy_fee_2"]
+            yearfee2 = form.cleaned_data["yearly_fee_2"]
             c2 = form.cleaned_data["comment_2"]
             logger.debug(f"Extracting cleaned data from form{COMP}")
 
@@ -93,8 +93,8 @@ def buy(request):
             bp1 = BatchPosition.objects.create(
                 quantity=q1,
                 buy_price=price1,
-                buy_fee=fee1,
-                yearly_fee=yfee1,
+                buy_fee=buyfee1,
+                yearly_fee=yearfee1,
                 fk_batch=batch,
                 comment=c1,
             )
@@ -105,7 +105,7 @@ def buy(request):
             ab1 = AccountBooking.objects.create(
                 fk_bank_account=bankaccount,
                 fk_transaction=trans,
-                value=(-1) * ((q1 * fee1.amount) + fee1.amount),
+                value=(-1) * ((q1 * price1.amount) + buyfee1.amount),
                 booking_date=bdate,
                 description=get_description_string(
                     security=sec, description=descr, date=bdate, batch_position=1
@@ -132,8 +132,8 @@ def buy(request):
                 bp2 = BatchPosition.objects.create(
                     quantity=q2,
                     buy_price=price2,
-                    buy_fee=fee2,
-                    yearly_fee=yfee2,
+                    buy_fee=buyfee2,
+                    yearly_fee=yearfee2,
                     fk_batch=batch,
                     comment=c2,
                 )
@@ -143,7 +143,7 @@ def buy(request):
                 AccountBooking.objects.create(
                     fk_bank_account=bankaccount,
                     fk_transaction=trans,
-                    value=(-1) * ((q2 * fee2.amount) + fee1.amount),
+                    value=(-1) * ((q2 * price2.amount) + buyfee1.amount),
                     booking_date=bdate,
                     description=get_description_string(
                         security=sec, description=descr, date=bdate, batch_position=2
