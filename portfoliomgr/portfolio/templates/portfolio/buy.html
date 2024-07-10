@@ -13,14 +13,12 @@ new
                     <h5>Buy Stock</h5>
                 </div>
                 <div class="card-block">
-                    <div class="col-md-6">
-                        Let's buy some stock
-                        <form action="{% url 'buy' %}" method="post">
+                    <!--<form action="{% url 'buy' %}" method="post">
                             {% csrf_token %}
                             {{ form|crispy }}
                             <input type="submit" value="Submit">
-                        </form>
-                    </div>
+</form>-->
+                    {% crispy form %}
                 </div>
             </div>
         </div>

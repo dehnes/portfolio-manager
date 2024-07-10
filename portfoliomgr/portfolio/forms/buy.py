@@ -1,40 +1,15 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 from djmoney.forms import MoneyField
 from moneyed import Decimal
 
-from .models import AccountBooking, BankAccount, Depot, Security, Transaction
+from ..models import BankAccount, Depot, Security
 
 
 class DateInput(forms.DateInput):
     input_type = "date"
     format = "%d-%m-%Y"
-
-
-class DepositForm(forms.ModelForm):
-    class Meta:
-        model = AccountBooking
-        fields = "__all__"
-        exclude = ("fk_transaction",)
-        localized_fields = ["booking_date"]
-        widgets = {"booking_date": DateInput()}
-
-
-class WithdrawForm(forms.ModelForm):
-    class Meta:
-        model = AccountBooking
-        fields = "__all__"
-        exclude = ("fk_transaction",)
-        localized_fields = ["booking_date"]
-        widgets = {"booking_date": DateInput()}
-
-
-class BuyStockForm(forms.Form):
-    security = forms.ChoiceField(label="Security")
-    quantity_1 = forms.IntegerField()
-    price_2 = forms.DecimalField(max_digits=10, decimal_places=2)
-    quantity_1 = forms.IntegerField()
-    price_2 = forms.DecimalField(max_digits=10, decimal_places=2)
-    fee = forms.DecimalField(max_digits=10, decimal_places=2)
 
 
 class BuyForm(forms.Form):
@@ -45,7 +20,13 @@ class BuyForm(forms.Form):
     depot = forms.ModelChoiceField(queryset=Depot.objects.all(), label="Depot")
     buy_date = forms.DateField(widget=DateInput(), localize=True)
     description = forms.CharField(
-        label="Description", max_length=500, widget=forms.Textarea()
+        label="Description",
+        max_length=500,
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "Provide a menaingful description of the overall pruchase"
+            }
+        ),
     )
 
     # BATCH POSITION 1
@@ -101,3 +82,37 @@ class BuyForm(forms.Form):
         required=False,
     )
     comment_2 = forms.CharField(max_length=100, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column("security", css_class="col-md-4 mb-0"),
+                Column("bank_account", css_class="col-md-4 mb-0"),
+                Column("depot", css_class="col-md-4 mb-0"),
+                css_class="form-row",
+            ),
+            Row(
+                Column("description", css_class="col-md-8 mb-0"),
+                Column("buy_date", css_class="col-md-4 mb-0"),
+                css_class="form-row",
+            ),
+            Row(
+                Column("quantity_1", css_class="col-md-2 mb-0"),
+                Column("price_1", css_class="col-md-2 mb-0"),
+                Column("buy_fee_1", css_class="col-md-2 mb-0"),
+                Column("yeearly_fee_1", css_class="col-md-2 mb-0"),
+                Column("comment_1", css_class="col-md-4 mb-0"),
+                css_class="form-row",
+            ),
+            Row(
+                Column("quantity_2", css_class="col-md-2 mb-0"),
+                Column("price_2", css_class="col-md-2 mb-0"),
+                Column("buy_fee_2", css_class="col-md-2 mb-0"),
+                Column("yeearly_fee_2", css_class="col-md-2 mb-0"),
+                Column("comment_2", css_class="col-md-4 mb-0"),
+                css_class="form-row",
+            ),
+            Submit("submit", "Buy", css_class="btn btn-primary"),
+        )

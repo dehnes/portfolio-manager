@@ -1,10 +1,8 @@
 import logging
 
 from django.shortcuts import render
-from moneyed import Decimal
 
-from ..forms import BuyForm
-from ..market import get_market_price
+from ..forms.buy import BuyForm
 from ..models import (
     BUY,
     DRAFT,
@@ -16,6 +14,7 @@ from ..models import (
     BatchPositionBooking,
     Transaction,
 )
+from .utils.context import get_sidebar_context
 
 logger = logging.getLogger(__name__)
 COMP = "...[completed]"  # TODO refactor
@@ -33,6 +32,8 @@ def buy(request):
                 f"BUY: {security} - {description} - [{date}] - BATCH {batch_position}"
             )
 
+    context = {}
+    context["sidebar"] = get_sidebar_context()
     logger.debug(f"Request method is: {request.method}")
     if request.method == "POST":
         form = BuyForm(request.POST, request.FILES)
@@ -178,8 +179,9 @@ def buy(request):
         else:
             logger.info("Form is invalid")
             # TODO Add Error Messages
-            return render(request, "portfolio/buy.html", {"form": form})
+            context["form"] = form
+            return render(request, "portfolio/buy.html", context)
 
     else:
-        form = BuyForm()
-        return render(request, "portfolio/buy.html", {"form": form})
+        context["form"] = BuyForm()
+        return render(request, "portfolio/buy.html", context)
