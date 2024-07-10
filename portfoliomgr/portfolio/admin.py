@@ -7,6 +7,7 @@ from .models import (
     BankAccount,
     Batch,
     BatchPosition,
+    BatchPositionBooking,
     Depot,
     Institute,
     Person,
@@ -65,6 +66,7 @@ class BatchAdmin(admin.ModelAdmin):
     list_display = (
         "in_date",
         "fk_asset",
+        "description",
     )
 
 
@@ -76,6 +78,7 @@ class BatchPositionAdmin(admin.ModelAdmin):
         "buy_fee",
         "sell_fee",
         "yearly_fee",
+        "comment",
     )
 
 
@@ -107,6 +110,16 @@ class AccountBookingAdmin(admin.ModelAdmin):
     )
 
 
+class BatchPositionBookingAdmin(admin.ModelAdmin):
+    list_display = (
+        "fk_batch_position",
+        "fk_transaction",
+        "quantity",
+        "description",
+        "booking_date",
+    )
+
+
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Portfolio, PortfolioAdmin)
 admin.site.register(Depot, DepotAdmin)
@@ -119,3 +132,4 @@ admin.site.register(BatchPosition, BatchPositionAdmin)
 admin.site.register(Security, SecurityAdmin)
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(AccountBooking, AccountBookingAdmin)
+admin.site.register(BatchPositionBooking, BatchPositionBookingAdmin)

@@ -221,6 +221,7 @@ class Batch(models.Model):
     fk_asset = models.ForeignKey(
         Asset, on_delete=models.CASCADE, blank=False, verbose_name="Asset"
     )
+    description = models.CharField(max_length=500, default="", blank=True)
 
     def __str__(self) -> str:
         return f"{self.fk_asset} Bought: {self.in_date}"
@@ -272,6 +273,7 @@ class BatchPosition(models.Model):
         blank=False,
         related_name="batch_positions",
     )
+    comment = models.CharField(max_length=100, blank=True)
 
 
 class DividendPayment(models.Model):

@@ -71,27 +71,33 @@ class BuyForm(forms.Form):
         default_currency="EUR",
         label="Yearly Fee",
     )
-
+    comment_1 = forms.CharField(max_length=100, required=False)
     # BATCH POSITION 2
-    quantity_2 = forms.DecimalField(max_digits=14, decimal_places=2, label="Quantity 2")
+    quantity_2 = forms.DecimalField(
+        max_digits=14, decimal_places=2, label="Quantity 2", required=False
+    )
     price_2 = MoneyField(
         max_digits=14,
         min_value=0,
         default_amount=Decimal("0.0"),
         default_currency="EUR",
         label="Price 2",
+        required=False,
     )
     buy_fee_2 = MoneyField(
         max_digits=14,
         min_value=0,
         default_amount=Decimal("0.0"),
         default_currency="EUR",
-        label="Buy Fee",
+        label="Buy Fee 2",
+        required=False,
     )
     yearly_fee_2 = MoneyField(
         max_digits=14,
         min_value=0,
         default_amount=Decimal("0.0"),
         default_currency="EUR",
-        label="Yearly Fee",
+        label="Yearly Fee 2",
+        required=False,
     )
+    comment_2 = forms.CharField(max_length=100, required=False)
