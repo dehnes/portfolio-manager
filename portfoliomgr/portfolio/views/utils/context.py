@@ -1,4 +1,4 @@
-from ...models import Portfolio
+from ...models.portfolio import Portfolio
 
 
 def get_sidebar_context():

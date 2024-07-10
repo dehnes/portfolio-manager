@@ -1,6 +1,6 @@
 from django import forms
 
-from ..models import AccountBooking
+from ..models.account_booking import AccountBooking
 
 
 class DateInput(forms.DateInput):

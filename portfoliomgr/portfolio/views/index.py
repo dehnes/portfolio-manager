@@ -4,7 +4,11 @@ from django.db.models import Sum
 from django.shortcuts import render
 
 from ..market import get_market_price
-from ..models import Asset, Depot, Person, Portfolio, Security
+from ..models.asset import Asset
+from ..models.depot import Depot
+from ..models.person import Person
+from ..models.portfolio import Portfolio
+from ..models.security import Security
 from ..views.utils.context import get_sidebar_context
 
 logger = logging.getLogger(__name__)

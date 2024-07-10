@@ -3,7 +3,7 @@ import logging
 from django.shortcuts import render
 
 from ..forms.deposit import DepositForm
-from ..models import Transaction
+from ..models.transaction import Transaction
 from .utils.context import get_sidebar_context
 
 logger = logging.getLogger(__name__)

@@ -1,24 +1,26 @@
 # Register your models here.
 from django.contrib import admin
 
-from .models import (
-    AccountBooking,
-    Asset,
-    BankAccount,
-    Batch,
-    BatchPosition,
-    BatchPositionBooking,
-    Depot,
-    Institute,
-    Person,
-    Portfolio,
-    Security,
-    Transaction,
-)
+from .models.account_booking import AccountBooking
+from .models.asset import Asset
+from .models.bank_account import BankAccount
+from .models.batch import Batch
+from .models.batch_position import BatchPosition
+from .models.batch_position_booking import BatchPositionBooking
+from .models.depot import Depot
+from .models.institute import Institute
+from .models.person import Person
+from .models.portfolio import Portfolio
+from .models.security import Security
+from .models.transaction import Transaction
 
 
 class PersonAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        "name",
+        "surname",
+        "picture",
+    )
 
 
 class InstituteAdmin(admin.ModelAdmin):

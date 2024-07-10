@@ -2,7 +2,8 @@ import logging
 
 from django.shortcuts import render
 
-from ..models import AccountBooking, BankAccount
+from ..models.account_booking import AccountBooking
+from ..models.bank_account import BankAccount
 from .utils.context import get_sidebar_context
 
 logger = logging.getLogger(__name__)

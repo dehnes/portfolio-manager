@@ -4,7 +4,9 @@ from django import forms
 from djmoney.forms import MoneyField
 from moneyed import Decimal
 
-from ..models import BankAccount, Depot, Security
+from ..models.bank_account import BankAccount
+from ..models.depot import Depot
+from ..models.security import Security
 
 
 class DateInput(forms.DateInput):

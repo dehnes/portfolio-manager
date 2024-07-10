@@ -1,6 +1,6 @@
 from django.views.generic.list import ListView
 
-from ..models import BankAccount
+from ..models.bank_account import BankAccount
 
 
 class BankAccountsList(ListView):

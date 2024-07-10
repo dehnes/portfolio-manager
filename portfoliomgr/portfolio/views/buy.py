@@ -3,17 +3,12 @@ import logging
 from django.shortcuts import render
 
 from ..forms.buy import BuyForm
-from ..models import (
-    BUY,
-    DRAFT,
-    EXECUTED,
-    AccountBooking,
-    Asset,
-    Batch,
-    BatchPosition,
-    BatchPositionBooking,
-    Transaction,
-)
+from ..models.account_booking import AccountBooking
+from ..models.asset import Asset
+from ..models.batch import Batch
+from ..models.batch_position import BatchPosition
+from ..models.batch_position_booking import BatchPositionBooking
+from ..models.transaction import BUY, DRAFT, EXECUTED, Transaction
 from .utils.context import get_sidebar_context
 
 logger = logging.getLogger(__name__)

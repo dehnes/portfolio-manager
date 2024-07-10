@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from ..forms.withdraw import WithdrawForm
 from ..market import get_market_price
-from ..models import WITHDRAWAL, Transaction
+from ..models.transaction import WITHDRAWAL, Transaction
 from .utils.context import get_sidebar_context
 
 logger = logging.getLogger(__name__)
