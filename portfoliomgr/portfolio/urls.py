@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .views.asset import asset
 from .views.bank_account import bankaccount
 from .views.bank_accounts import BankAccountsList
 from .views.buy import buy
@@ -16,6 +17,7 @@ urlpatterns = [
     path("bankaccount/<int:id>", bankaccount, name="bankaccount"),
     path("portfolios/", portfolios, name="portfolios"),
     path("portfolios/<int:id>", portfolio, name="portfolio"),
+    path("assets/<int:id>", asset, name="asset"),
     path("deposit/", deposit, name="deposit"),
     path("withdraw/", withdraw, name="withdraw"),
     path("buy/", buy, name="buy"),

@@ -127,7 +127,7 @@ def buy(request):
             logger.debug(f"Creating BatchPositionBooking 1{COMP}")
 
             # Die zweite Batchposition anlegen
-            if float(q2 > 0.0):
+            if q2:
                 logger.debug(f"Creating BatchPosition 2{STAR}")
                 bp2 = BatchPosition.objects.create(
                     quantity=q2,

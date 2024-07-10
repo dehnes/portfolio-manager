@@ -1,0 +1,115 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block breadcrumbs %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <!--[ Recent Users ] start-->
+        <div class="col-xl-9 col-md-6">
+            <div class="card Recent-Users">
+                <div class="card-header">
+                    <h5>{{ asset }}</h5>
+                </div>
+                {% for batch in batches %}
+                    <div class="card-block px-3 py-3">
+                        <h6>{{ batch }}</h6>
+                    </div>
+                    <div class="card-block px-0 py-3">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <small>Quantity</small>
+                                        </th>
+                                        <th>
+                                            <small>Value</small>
+                                        </th>
+                                        <th>
+                                            <small>Buy Price</small>
+                                        </th>
+                                        <th>
+                                            <small>Comment</small>
+                                        </th>
+                                        <th>
+                                            <small>Buy fee</small>
+                                        </th>
+                                        <th>
+                                            <small>Yearly Fee</small>
+                                        </th>
+                                        <th>
+                                            <small>Sell Fee</small>
+                                        </th>
+                                        <th>
+                                            <small>Actions</small>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for pos in batch.positions %}
+                                        <tr>
+                                            <td>{{ pos.quantity }}</td>
+                                            <td>{{ pos.value|floatformat:"2g" }}&nbsp;€</td>
+                                            <td>{{ pos.buy_price }}</td>
+                                            <td>{{ pos.comment }}</td>
+                                            <td>{{ pos.buy_fee }}</td>
+                                            <td>{{ pos.yearly_fee }}</td>
+                                            <td>{{ pos.sell_fee }}</td>
+                                            <td>
+                                                <a href="#" class="label theme-bg text-white f-12">sell</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Security Info-->
+        <div class="col-md-6 col-xl-3">
+            <div class="card daily-sales">
+                <div class="card-block">
+                    <h6 class="mb-4">{{ asset.fk_security.name }}</h6>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-8">
+                            <h5 class="f-w-300 d-flex align-items-center m-b-0">
+                                <i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>{{ asset.fk_security.market_price|floatformat:2 }} €
+                            </h5>
+                        </div>
+                        <div class="col-4 text-right">
+                            <p class="m-b-0">+x,xx%</p>
+                        </div>
+                    </div>
+                    <div class="progress m-t-30" style="height: 7px;">
+                        <div class="progress-bar progress-c-theme"
+                             role="progressbar"
+                             style="width: 50%"
+                             aria-valuenow="50"
+                             aria-valuemin="0"
+                             aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Depot Info-->
+        <div class="col-md-6 col-xl-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Depot and Bank  account</h5>
+                </div>
+                <div class="card-block">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-12">
+                            <p class="d-flex align-items-left m-b-0">Depot: {{ asset.fk_depot.name }}</p>
+                            <p class="d-flex align-items-left m-b-0">Institute: {{ asset.fk_depot.fk_institute.short_name }}</p>
+                            <p class="d-flex align-items-left m-b-0">Owner: {{ asset.fk_depot.fk_owner }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
