@@ -170,7 +170,7 @@ def buy(request):
             trans.save()
             logger.debug(f"Saving Transaction{COMP}")
 
-            return render(request, "portfolio/buy_success.html")
+            return render(request, "portfolio/buy_success.html", context)
         else:
             logger.info("Form is invalid")
             # TODO Add Error Messages
