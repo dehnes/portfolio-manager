@@ -26,8 +26,12 @@ from ..models.person import Person
 
 
 class PaymentProvider(models.Model):
-    name = models.CharField(max_length=100, blank=False)
+    name = models.CharField(max_length=100, blank=False, verbose_name="Name")
+    short_name = models.CharField(max_length=10, default="", verbose_name="Short Name")
     logo = ResizedImageField(size=[300, 300], upload_to="logos", force_format="PNG")
+
+    def __str__(self) -> str:
+        return self.name
 
 
 CREDIT = "Credit"
@@ -71,3 +75,6 @@ class PaymentCard(models.Model):
         validators=[MinValueValidator(0)], blank=True
     )
     status = models.BooleanField(default=True, verbose_name="Active")
+
+    def __str__(self) -> str:
+        return self.name

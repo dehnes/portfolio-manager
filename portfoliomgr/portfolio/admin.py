@@ -1,5 +1,6 @@
 # Register your models here.
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models.account_booking import AccountBooking
 from .models.asset import Asset
@@ -7,6 +8,7 @@ from .models.bank_account import BankAccount
 from .models.batch import Batch
 from .models.batch_position import BatchPosition
 from .models.batch_position_booking import BatchPositionBooking
+from .models.card import PaymentCard, PaymentProvider
 from .models.depot import Depot
 from .models.institute import Institute
 from .models.person import Person
@@ -122,6 +124,38 @@ class BatchPositionBookingAdmin(admin.ModelAdmin):
     )
 
 
+class PaymentProviderAdmin(admin.ModelAdmin):
+
+    def image_tag(self, obj):  # sourcery skip: use-fstring-for-formatting
+        return format_html(
+            '<img src="{}" style="max-width:48px; max-height:48px"/>'.format(
+                obj.logo.url
+            )
+        )
+
+    list_display = (
+        "image_tag",
+        "name",
+        "short_name",
+    )
+
+
+class PaymentCardAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "type",
+        "fk_payment_service",
+        "fk_owner",
+        "fk_account",
+        "card_number",
+        "valid_month",
+        "valid_year",
+        "cvc",
+        "karten_folge_nummer",
+        "status",
+    )
+
+
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Portfolio, PortfolioAdmin)
 admin.site.register(Depot, DepotAdmin)
@@ -135,3 +169,5 @@ admin.site.register(Security, SecurityAdmin)
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(AccountBooking, AccountBookingAdmin)
 admin.site.register(BatchPositionBooking, BatchPositionBookingAdmin)
+admin.site.register(PaymentProvider, PaymentProviderAdmin)
+admin.site.register(PaymentCard, PaymentCardAdmin)
