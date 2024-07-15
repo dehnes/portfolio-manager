@@ -42,6 +42,12 @@
                                             <small>Sell Fee</small>
                                         </th>
                                         <th>
+                                            <small>Absolute Performance</small>
+                                        </th>
+                                        <th>
+                                            <small>Abs. Perf. annualized</small>
+                                        </th>
+                                        <th>
                                             <small>Actions</small>
                                         </th>
                                     </tr>
@@ -55,6 +61,8 @@
                                             <td>{{ pos.comment }}</td>
                                             <td>{{ pos.buy_fee }}</td>
                                             <td>{{ pos.yearly_fee }}</td>
+                                            <td>{{ pos.sell_fee }}</td> <!-- TODO implement Performance -->
+                                            <td>{{ pos.sell_fee }}</td><!-- TODO implement Performance -->
                                             <td>{{ pos.sell_fee }}</td>
                                             <td>
                                                 <a href="#" class="label theme-bg text-white f-12">sell</a>

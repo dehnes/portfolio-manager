@@ -8,7 +8,7 @@
     <!--[Ticker ] start-->
     {% for sec in securities %}
       <div class="col-md-6 col-xl-3">
-        <div class="card daily-sales">
+        <div class="card Recent-Users">
           <div class="card-block">
             <h6 class="mb-4">{{ sec.name }}</h6>
             <div class="row d-flex align-items-center">
@@ -21,13 +21,8 @@
                 <p class="m-b-0">+x,xx%</p>
               </div>
             </div>
-            <div class="progress m-t-30" style="height: 7px;">
-              <div class="progress-bar progress-c-theme"
-                   role="progressbar"
-                   style="width: 50%"
-                   aria-valuenow="50"
-                   aria-valuemin="0"
-                   aria-valuemax="100"></div>
+            <div class="m-t-15 text-right">
+              <a href="{% url 'buy' %}" class="label theme-bg text-white f-12">buy</a>
             </div>
           </div>
         </div>

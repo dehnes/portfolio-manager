@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def asset(request, id):
+    # TODO implement performance calculation
     context = {}
     context["sidebar"] = get_sidebar_context()
     asset = Asset.objects.filter(id=id)[0]
