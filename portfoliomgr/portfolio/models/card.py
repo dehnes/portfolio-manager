@@ -67,12 +67,19 @@ class PaymentCard(models.Model):
     )
     card_number = models.CharField(max_length=24, verbose_name="Card Number")
     valid_month = models.IntegerField(
-        default=1, validators=[MinValueValidator(1), MaxValueValidator(12)]
+        default=1,
+        validators=[MinValueValidator(1), MaxValueValidator(12)],
+        verbose_name="MM",
     )
-    valid_year = models.IntegerField(default=2022, validators=[MinValueValidator(2022)])
+    valid_year = models.IntegerField(
+        default=2022, validators=[MinValueValidator(2022)], verbose_name="YY"
+    )
     cvc = models.CharField(max_length=3, blank=True, verbose_name="CVC")
     karten_folge_nummer = models.IntegerField(
-        validators=[MinValueValidator(0)], blank=True
+        validators=[MinValueValidator(0)],
+        blank=True,
+        null=True,
+        verbose_name="Kartenfolgenummer",
     )
     status = models.BooleanField(default=True, verbose_name="Active")
 
