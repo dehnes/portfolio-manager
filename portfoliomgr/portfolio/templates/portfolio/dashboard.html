@@ -1,0 +1,172 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    Breadcrumbs go here
+{% endblock breadcrumbs %}
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <div class="col-xl-12 col-md-12">
+            <div class="card Recent-Users">
+                <div class="card-header">
+                    <h5>
+                        <img class="rounded-circle"
+                             style="width:50px"
+                             src="{{ person.picture.url }}"
+                             alt="pic"
+                             width="50"
+                             height="50" />
+                        &nbsp;&nbsp;
+                        {{ person }}
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <!-- [ Depots ] start -->
+        {% for depot in depots %}
+            {% if depot.is_active %}
+                <div class="col-xl-12 col-md-12">
+                    <div class="card Recent-Users">
+                        <div class="card-header">
+                            <h6>
+                                <img src="{{ depot.fk_institute.logo.url }}"
+                                     height="24"
+                                     width="24"
+                                     alt="logo">
+                                &nbsp;Depot:
+                                {{ depot.name }} - {{ depot.fk_institute.short_name }}
+                            </h6>
+                        </div>
+                        <div class="card-block px-0 py-3">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <small>WKN</small>
+                                            </th>
+                                            <th>
+                                                <small>ISIN</small>
+                                            </th>
+                                            <th>
+                                                <small>Security</small>
+                                            </th>
+                                            <th>
+                                                <small>Quantity</small>
+                                            </th>
+                                            <th>
+                                                <small>Stock Price</small>
+                                            </th>
+                                            <th>
+                                                <small>Value</small>
+                                            </th>
+                                            <th>
+                                                <small>Perf. absolute</small>
+                                            </th>
+                                            <th>
+                                                <small>Perf. absolute annual</small>
+                                            </th>
+                                            <th>
+                                                <small>Perf. YTD</small>
+                                            </th>
+                                            <th>
+                                                <small>&nbsp;</small>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for asset in assets %}
+                                            {% if asset.fk_depot == depot %}
+                                                <tr>
+                                                    <td class="font-weight-bold text-primary">{{ asset.fk_security.wkn }}</td>
+                                                    <td class="font-weight-bold">{{ asset.fk_security.isin }}</td>
+                                                    <td class="font-weight-bold">{{ asset.fk_security.name }}</td>
+                                                    <td>{{ asset.batch_positions_sum }} Stck.</td>
+                                                    <td class="font-weight-bold">{{ asset.price|floatformat:"2g" }} €</td>
+                                                    <td class="font-weight-bold text-primary">{{ asset.balance|floatformat:"2g" }} €</td>
+                                                    <td class="text-danger">0,0%</td>
+                                                    <td class="text-success">0,0%</td>
+                                                    <td>0,0%</td>
+                                                    <td>
+                                                        <a href="#" class="label theme-bg text-white f-12">sell</a>
+                                                        <a href="{% url 'asset' asset.id %}"
+                                                           class="label theme-bg2 text-white f-12">details</a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <!-- [ Bank Accounts ] start -->
+        <div class="col-md-12 col-xl-6">
+            <div class="card daily-sales">
+                <div class="card-header">
+                    <h5>Bank-Accounts</h5>
+                </div>
+                <div class="card-block">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    {% for account in accounts %}
+                                        <tr>
+                                            <td>
+                                                <img src="{{ account.fk_institute.logo.url }}"
+                                                     height="20"
+                                                     width="20"
+                                                     alt="logo">
+                                            </td>
+                                            <td>{{ account }}</td>
+                                            <td>{{ account.iban }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Cards ] start -->
+        <div class="col-md-12 col-xl-6">
+            <div class="card daily-sales">
+                <div class="card-header">
+                    <h5>Cards</h5>
+                </div>
+                <div class="card-block">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    {% for card in cards %}
+                                        <tr>
+                                            <td>
+                                                <img src="{{ card.fk_account.fk_institute.logo.url }}"
+                                                     height="20"
+                                                     width="20"
+                                                     alt="logo">
+                                            </td>
+                                            <td>{{ card }}</td>
+                                            <td>
+                                                <img src="{{ card.fk_payment_service.logo.url }}"
+                                                     height="32"
+                                                     width="32"
+                                                     alt="logo">
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
