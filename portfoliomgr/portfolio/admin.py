@@ -19,7 +19,7 @@ from .models.transaction import Transaction
 
 class PersonAdmin(admin.ModelAdmin):
     list_display = (
-        "name" ,
+        "name",
         "surname",
         "picture",
     )
